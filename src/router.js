@@ -1,10 +1,24 @@
 import { createAppContainer } from 'react-navigation'
-import {  createSwitchNavigator  } from 'react-navigation'
-import Login from './Login'
+import {  createStackNavigator } from 'react-navigation-stack'
+import Login from './screens/Login'
+import Register from './screens/Register'
+import Main from './screens/Main'
 
-const AppNavigation = createSwitchNavigator({
+const AppNavigation = createStackNavigator ({
     Login:{
-        screen: Login
+        screen: Login, navigationOptions:{
+            header: null
+        }
+    },
+    Register:{
+        screen: Register, navigationOptions:{
+            header: null
+        }
+    },
+    Main:{
+        screen: Main, navigationOptions:{
+            header: null
+        }
     }
 })
 

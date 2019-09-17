@@ -1,11 +1,15 @@
 import React from 'react'
 import { View ,Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native'
-import Delivery from './assets/delivery.png'
+import Delivery from '../assets/gas.png'
 
-const Login = ()=>{
+const Login = ({navigation})=>{
+
     return(
         <View style={styles.container}>
-            <Image style={styles.logo} source={Delivery}/>
+            <View style={styles.container_logo}>
+                <Image style={styles.logo} source={Delivery}/>
+                <Text style={styles.logo_text}>HELP-GÁS</Text>
+            </View>
             <TextInput
             style={styles.input}
             placeholder=" Login"
@@ -16,8 +20,14 @@ const Login = ()=>{
             placeholder=" Password"
             placeholderTextColor="#323232"
             />
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+                onPress={()=> navigation.navigate('Main')}
+                style={styles.button}>
                 <Text style={styles.logger}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.register} 
+                onPress={()=> navigation.navigate('Register') }>
+                <Text style={styles.text_register}>Não tem cadastro? Cadastre-se</Text>
             </TouchableOpacity>
         </View>
     )
@@ -54,10 +64,27 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '600'
     },
+    container_logo:{
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+    logo_text:{
+        fontSize: 40,
+        color: '#E67E22',
+        marginLeft: 8,
+        marginTop: 4,
+        marginBottom: 40,
+        fontWeight:'bold'
+    },
     logo:{
-        width: 150,
-        height :150,
-        marginBottom: 30
+        width: 90,
+        height :140,
+    },
+    register:{
+        marginTop: 40,
+    },
+    text_register:{
+        color: 'white'
     }
 })
 export default Login
