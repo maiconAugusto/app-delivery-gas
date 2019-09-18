@@ -1,18 +1,30 @@
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 import {    View, 
             TextInput, 
             TouchableOpacity, 
             StyleSheet, 
             Text
         } from 'react-native'
+import firebase from '../config/firebase'
+import base64 from 'base-64'
 import axios from 'axios'
-import base64 from ''
-
+import date from '../config/Date'
 
 const Register = ()=>{
-    function handleRegister(){
+    const [ name, setName ] = useState('')
+    const [ password, setPassword ] = useState('')
+    const [ passwordComfirm, setPasswordcomfirm] = useState('')
+    const [ email, setEmail ] = useState('')
+    const [ phone, setPhone ] = useState('')
+
+    async function handleRegister(){
+        const email_ID = base64.encode(email)
+
         try{
-            axios.post(`Users/`)
+            await firebase.auth().createUserWithEmailAndPassword(email, password)
+            axios.post(`/Users/${email_ID}.json`,{
+                name, phone, email, created: date
+            })
         }
         catch(err){
 
@@ -24,28 +36,37 @@ const Register = ()=>{
             style={styles.input}
             placeholder=" Nome"
             placeholderTextColor="#323232"
+            onChangeText={(text) => setName(text)}
             />
             <TextInput
             style={styles.input}
              placeholder=" E-mail"
              placeholderTextColor="#323232"
+             onChangeText={(text) => setEmail(text)}
             />
             <TextInput
             style={styles.input}
              placeholder=" Telefone"
              placeholderTextColor="#323232"
+             onChangeText={(text) => setPhone(text)}
             />
             <TextInput
             style={styles.input}
              placeholder=" Senha"
              placeholderTextColor="#323232"
+             secureTextEntry
+             onChangeText={(text)=> setPassword(text)}
             />
             <TextInput
             style={styles.input}
              placeholder=" Confirmar Senha"
              placeholderTextColor="#323232"
+             secureTextEntry
+             onChangeText={(text)=> setPasswordcomfirm(text)}
             />
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+                onPress={()=> handleRegister()}
+                style={styles.button}>
                 <Text style={styles.text_register}>Cadastrar</Text>
             </TouchableOpacity>
         </View>
