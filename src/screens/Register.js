@@ -18,11 +18,13 @@ const Register = ()=>{
     const [ phone, setPhone ] = useState('')
 
     async function handleRegister(){
+        if(!name || !email || !password || !phone) return
+        if( password !== passwordComfirm) return
         const email_ID = base64.encode(email)
 
         try{
             await firebase.auth().createUserWithEmailAndPassword(email, password)
-            axios.post(`/Users/${email_ID}.json`,{
+            await axios.post(`/Users/${email_ID}.json`,{
                 name, phone, email, created: date
             })
         }
