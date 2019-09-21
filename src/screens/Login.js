@@ -1,9 +1,27 @@
-import React from 'react'
-import { View ,Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native'
-import Delivery from '../assets/gas.png'
+import React, { useState, useEffect } from 'react'
+import { View ,Text, TextInput, TouchableOpacity, StyleSheet, Image, AsyncStorage } from 'react-native';
+import Delivery from '../assets/gas.png';
+import firebase from 'firebase'
 
 const Login = ({navigation})=>{
+    const [ email, setEmail ] = useState('')
+    const [ password, setPassword ] = useState('')
 
+    useEffect(()=>{
+        AsyncStorage.getItem('Email').then((response)=>{
+            navigation.navigate('Main')
+        })
+    },[])
+
+    async function handleLogin(){
+        try{
+            const response = await firebase.auth().signInWithEmailAndPassword(email, password)
+            await AsyncStorage.setItem('Email',JSON.stringify(response.user.email))
+        }
+        catch(err){
+
+        }
+    }
     return(
         <View style={styles.container}>
             <View style={styles.container_logo}>
@@ -14,19 +32,21 @@ const Login = ({navigation})=>{
             style={styles.input}
             placeholder=" Login"
             placeholderTextColor="#323232"
+            onChangeText={(text)=> setEmail(text)}
             />
             <TextInput
             style={styles.input}
             placeholder=" Password"
             placeholderTextColor="#323232"
+            secureTextEntry
+            onChangeText={(text)=> setPassword(text)}
             />
             <TouchableOpacity
-                onPress={()=> navigation.navigate('Main')}
+                 onPress={()=> handleLogin()}
                 style={styles.button}>
                 <Text style={styles.logger}>Login</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.register} 
-                onPress={()=> navigation.navigate('Register') }>
+            <TouchableOpacity style={styles.register} >
                 <Text style={styles.text_register}>Não tem cadastro? Cadastre-se</Text>
             </TouchableOpacity>
         </View>
@@ -81,7 +101,7 @@ const styles = StyleSheet.create({
         height :140,
     },
     register:{
-        marginTop: 40,
+        marginTop: 25,
     },
     text_register:{
         color: 'white'
