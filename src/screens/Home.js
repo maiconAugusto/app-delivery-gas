@@ -5,15 +5,24 @@ import { Icon } from 'react-native-elements'
 import axios from 'axios'
 import base64 from 'base-64'
 import date from '../config/Date'
+import firebase from 'firebase'
 
 const Home = ()=>{
-    const [ qtd, setQtd ] = useState('')
+    const [ quantity , setQuantity ] = useState('')
     const [ price, setPrice ] = useState('')
     const [ notProduct, setNotProduct ] = useState('')
     const [ Token, setToken ] = useState('')
+    const [ value, setValue ] = useState('')
 
     useEffect(()=>{
-        setQtd(0)
+        firebase.database().ref('Price')
+            .once('value')
+                .then((snapshot)=>{
+                    setValue(snapshot.val().Gas)
+                })
+    },[])
+    useEffect(()=>{
+        setQuantity(0)
         setPrice(0)
         setNotProduct(true)
         AsyncStorage.getItem('Email').then((response)=>{
@@ -22,19 +31,19 @@ const Home = ()=>{
         })
     },[])
     function handlerAdd(qtdNow){
-        if(qtd === 0){
-            setQtd(qtdNow) 
-                setPrice(65.55)
+        if(quantity === 0){
+            setQuantity(qtdNow) 
+                setPrice(value)
                     return
         }
-        const newQtd = qtd + qtdNow
-        const NewTotal = newQtd * 65.55
+        const newQuantity = quantity + qtdNow
+        const NewTotal = newQuantity * value
         setPrice(NewTotal.toFixed(2))
-        setQtd(newQtd)
+        setQtd(newQuantity)
     }
     function handlerCanceled(){
         setPrice(0)
-        setQtd(0)
+        setQuantity(0)
     }
     async function handlerFinalized(){
         if(qtd === 0){
@@ -42,7 +51,7 @@ const Home = ()=>{
                 axios.post(`/Pedidos/${Token}.json`,{
                     user: Token, qtd, price, request_date: date, router_of_delivery: false, delivered: false
                 })
-        setQtd(0)
+        setQuantity(0)
         setPrice(0)
     }
     function handlerError(){
@@ -59,7 +68,7 @@ const Home = ()=>{
                 <Image style={styles.iconBTJ} source={BTJ}/>
                     <View style={styles.add}>
                         <Text style={styles.description}>Preço:</Text>
-                        <Text style={styles.price}>68,55</Text>
+                        <Text style={styles.price}>{value}</Text>
                         <TouchableOpacity onPress={()=>handlerAdd(1)}>
                             <Icon
                             size={40}
@@ -124,8 +133,8 @@ const styles = StyleSheet.create({
         color: '#323232'
     },
     iconBTJ:{
-        height: 90,
-        width: 90,
+        height: 70,
+        width: 70,
         borderRadius: 100,
         marginLeft: 8
     },

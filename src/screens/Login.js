@@ -9,7 +9,7 @@ const Login = ({navigation})=>{
 
     useEffect(()=>{
         AsyncStorage.getItem('Email').then((response)=>{
-            //navigation.navigate('Main')
+            navigation.navigate('Main')
         })
     },[])
 
