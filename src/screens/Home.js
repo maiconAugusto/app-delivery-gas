@@ -1,40 +1,49 @@
 import React, { useState, useEffect } from 'react'
-import { View , StyleSheet, Image, Text, TouchableOpacity, Alert} from 'react-native'
+import { View , StyleSheet, Image, Text, TouchableOpacity, AsyncStorage} from 'react-native'
 import BTJ from '../assets/BTJ.png'
 import { Icon } from 'react-native-elements'
-
+import axios from 'axios'
+import base64 from 'base-64'
+import date from '../config/Date'
 
 const Home = ()=>{
     const [ qtd, setQtd ] = useState('')
-    const [ total, setTotal ] = useState('')
+    const [ price, setPrice ] = useState('')
     const [ notProduct, setNotProduct ] = useState('')
+    const [ Token, setToken ] = useState('')
 
     useEffect(()=>{
         setQtd(0)
-        setTotal(0)
+        setPrice(0)
         setNotProduct(true)
+        AsyncStorage.getItem('Email').then((response)=>{
+            const Token = base64.encode(response)
+                setToken(Token)
+        })
     },[])
     function handlerAdd(qtdNow){
         if(qtd === 0){
             setQtd(qtdNow) 
-                setTotal(65.55)
+                setPrice(65.55)
                     return
         }
         const newQtd = qtd + qtdNow
         const NewTotal = newQtd * 65.55
-        setTotal(NewTotal.toFixed(2))
+        setPrice(NewTotal.toFixed(2))
         setQtd(newQtd)
     }
     function handlerCanceled(){
-        setTotal(0)
+        setPrice(0)
         setQtd(0)
     }
-    function handlerFinalized(){
+    async function handlerFinalized(){
         if(qtd === 0){
-            setNotProduct(false)
-        }
+            setNotProduct(false)}
+                axios.post(`/Pedidos/${Token}.json`,{
+                    user: Token, qtd, price, request_date: date, router_of_delivery: false, delivered: false
+                })
         setQtd(0)
-        setTotal(0)
+        setPrice(0)
     }
     function handlerError(){
         setTimeout(()=>{
@@ -63,7 +72,7 @@ const Home = ()=>{
             </View>
             <View style={styles.section}>
                 <Text style={styles.text_info_qtd_price}>Quantidade: {qtd}</Text>
-                <Text style={styles.text_info_qtd_price}>Total: {total}</Text>
+                <Text style={styles.text_info_qtd_price}>Total: {price}</Text>
                 { notProduct === true ? <></> : 
                     handlerError()
                 }

@@ -9,7 +9,7 @@ const Login = ({navigation})=>{
 
     useEffect(()=>{
         AsyncStorage.getItem('Email').then((response)=>{
-            navigation.navigate('Main')
+            //navigation.navigate('Main')
         })
     },[])
 
@@ -42,11 +42,12 @@ const Login = ({navigation})=>{
             onChangeText={(text)=> setPassword(text)}
             />
             <TouchableOpacity
-                 onPress={()=> handleLogin()}
+                onPress={()=> handleLogin()}
                 style={styles.button}>
                 <Text style={styles.logger}>Login</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.register} >
+            <TouchableOpacity style={styles.register} 
+                onPress={()=> navigation.navigate('Register')}>
                 <Text style={styles.text_register}>Não tem cadastro? Cadastre-se</Text>
             </TouchableOpacity>
         </View>
@@ -66,7 +67,8 @@ const styles = StyleSheet.create({
         marginRight: 10,
         backgroundColor:'white',
         marginBottom: 12,
-        borderRadius: 4
+        borderRadius: 4,
+        height: 45
     },
     button:{
         alignSelf: 'stretch',

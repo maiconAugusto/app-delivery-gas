@@ -10,7 +10,7 @@ import base64 from 'base-64'
 import axios from 'axios'
 import date from '../config/Date'
 
-const Register = ()=>{
+const Register = ({navigation})=>{
     const [ name, setName ] = useState('')
     const [ password, setPassword ] = useState('')
     const [ passwordComfirm, setPasswordcomfirm] = useState('')
@@ -18,19 +18,20 @@ const Register = ()=>{
     const [ phone, setPhone ] = useState('')
 
     async function handleRegister(){
-        if(!name || !email || !password || !phone) return
-        if( password !== passwordComfirm) return
         const email_ID = base64.encode(email)
 
-        try{
-            await firebase.auth().createUserWithEmailAndPassword(email, password)
-            await axios.post(`/Users/${email_ID}.json`,{
-                name, phone, email, created: date
-            })
-        }
-        catch(err){
+        if(!name || !email || !password || !phone) return
+        if( password !== passwordComfirm) return
 
-        }
+        const response = await firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((response)=>{
+                axios.post(`Users/${email_ID}.json`,{
+                    name, phone, email, created: date
+                })
+                .then((response)=>{
+                    navigation.goBack()
+                })
+            })
     }
     return(
         <View style={styles.container}>
@@ -89,7 +90,8 @@ const styles = StyleSheet.create({
         marginRight: 10,
         backgroundColor:'white',
         marginBottom: 12,
-        borderRadius: 4
+        borderRadius: 4,
+        height: 45
     },
     button:{
         alignSelf: 'stretch',
