@@ -6,8 +6,10 @@ import axios from 'axios'
 import base64 from 'base-64'
 import date from '../config/Date'
 import firebase from 'firebase'
+import Header from './Header'
 
-const Home = ()=>{
+
+const Home = ({navigation})=>{
     const [ quantity , setQuantity ] = useState('')
     const [ price, setPrice ] = useState('')
     const [ notProduct, setNotProduct ] = useState('')
@@ -39,17 +41,17 @@ const Home = ()=>{
         const newQuantity = quantity + qtdNow
         const NewTotal = newQuantity * value
         setPrice(NewTotal.toFixed(2))
-        setQtd(newQuantity)
+        setQuantity(newQuantity)
     }
     function handlerCanceled(){
         setPrice(0)
         setQuantity(0)
     }
     async function handlerFinalized(){
-        if(qtd === 0){
+        if(quantity === 0){
             setNotProduct(false)}
-                axios.post(`/Pedidos/${Token}.json`,{
-                    user: Token, qtd, price, request_date: date, router_of_delivery: false, delivered: false
+                firebase.database().ref(`/Pedidos/${Token}`).push({
+                    user: Token, quantity, price, request_date: date, router_of_delivery: false, delivered: false
                 })
         setQuantity(0)
         setPrice(0)
@@ -62,8 +64,17 @@ const Home = ()=>{
             <Text style={styles.msg_err}>SELECIONE O PRODUTO</Text>
         )
     }
+    function handlerLoggof(){
+        AsyncStorage.removeItem('Email')
+        navigation.pop()
+    }
     return(
         <View style={styles.container}>
+            <View style={styles.container_nav}>
+                <TouchableOpacity onPress={()=> handlerLoggof()}>
+                    <Text style={styles.exit}>Sair</Text>
+                </TouchableOpacity>
+            </View>
             <View style={styles.header}>
                 <Image style={styles.iconBTJ} source={BTJ}/>
                     <View style={styles.add}>
@@ -80,7 +91,7 @@ const Home = ()=>{
                     </View>
             </View>
             <View style={styles.section}>
-                <Text style={styles.text_info_qtd_price}>Quantidade: {qtd}</Text>
+                <Text style={styles.text_info_qtd_price}>Quantidade: {quantity}</Text>
                 <Text style={styles.text_info_qtd_price}>Total: {price}</Text>
                 { notProduct === true ? <></> : 
                     handlerError()
@@ -181,6 +192,24 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontSize: 18,
         color :'#EA4C4C'
+    },
+    exit:{
+        flexDirection :'row',
+        padding: 14,
+        backgroundColor:'#2476E6'
+    },
+    container_nav:{
+        flex: 0.2,
+        flexDirection: 'row-reverse',
+        padding: 16,
+        width: '100%',
+        backgroundColor :'#2476E6',
+    },
+    exit:{
+        fontSize: 17,
+        color: 'white',
+        fontWeight: '800',
+        marginRight: 8
     }
 })
 export default Home

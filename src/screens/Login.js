@@ -9,7 +9,12 @@ const Login = ({navigation})=>{
 
     useEffect(()=>{
         AsyncStorage.getItem('Email').then((response)=>{
-            navigation.navigate('Main')
+            if( response === null){
+                return
+            }
+            else{
+                navigation.navigate('Main')
+            }
         })
     },[])
 
@@ -17,6 +22,7 @@ const Login = ({navigation})=>{
         try{
             const response = await firebase.auth().signInWithEmailAndPassword(email, password)
             await AsyncStorage.setItem('Email',JSON.stringify(response.user.email))
+            navigation.navigate('Main')
         }
         catch(err){
 
@@ -44,7 +50,7 @@ const Login = ({navigation})=>{
             <TouchableOpacity
                 onPress={()=> handleLogin()}
                 style={styles.button}>
-                <Text style={styles.logger}>Login</Text>
+                <Text style={styles.logger}>Entrar</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.register} 
                 onPress={()=> navigation.navigate('Register')}>
@@ -68,7 +74,7 @@ const styles = StyleSheet.create({
         backgroundColor:'white',
         marginBottom: 12,
         borderRadius: 4,
-        height: 45
+        height: 47
     },
     button:{
         alignSelf: 'stretch',

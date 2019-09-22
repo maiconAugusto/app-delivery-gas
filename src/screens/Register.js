@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
         backgroundColor:'white',
         marginBottom: 12,
         borderRadius: 4,
-        height: 45
+        height: 47
     },
     button:{
         alignSelf: 'stretch',
@@ -102,12 +102,6 @@ const styles = StyleSheet.create({
         height: 50,
         justifyContent: 'center',
         borderRadius: 4
-    },
-    logger:{
-        textAlign: 'center',
-        color: '#323232',
-        fontSize: 18,
-        fontWeight: '600'
     },
     button:{
         alignSelf: 'stretch',
@@ -120,6 +114,9 @@ const styles = StyleSheet.create({
         borderRadius: 4
     },
     text_register:{
-        textAlign:'center'
+        textAlign: 'center',
+        color: '#323232',
+        fontSize: 18,
+        fontWeight: '600'
     }
 })
