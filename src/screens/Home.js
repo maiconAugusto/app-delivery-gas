@@ -49,10 +49,10 @@ const Home = ({navigation})=>{
     }
     async function handlerFinalized(){
         if(quantity === 0){
-            setNotProduct(false)}
-                firebase.database().ref(`/Pedidos/${Token}`).push({
-                    user: Token, quantity, price, request_date: date, router_of_delivery: false, delivered: false
-                })
+            return setNotProduct(false)}
+        firebase.database().ref(`/Pedidos/${Token}`).push({
+            user: Token, quantity, price, request_date: date, router_of_delivery: false, delivered: false
+        })
         setQuantity(0)
         setPrice(0)
     }
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems: 'center',
-        backgroundColor: '#F5F4F4',
+        backgroundColor: '#EAEDED',
         margin: 10,
         marginTop: 14,
         borderRadius: 2,
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         margin: 10,
-        backgroundColor: '#F5F4F4',
+        backgroundColor: '#EAEDED',
         borderRadius: 2,
         borderWidth: 1.5,
         borderColor: '#E5E5E5'

@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import { View ,Text, TextInput, TouchableOpacity, StyleSheet, Image, AsyncStorage } from 'react-native';
+import {View ,
+        Text, 
+        TextInput, 
+        TouchableOpacity, 
+        StyleSheet, 
+        ActivityIndicator, 
+        AsyncStorage } 
+        from 'react-native';
 import Delivery from '../assets/gas.png';
 import firebase from 'firebase'
 
 const Login = ({navigation})=>{
     const [ email, setEmail ] = useState('')
     const [ password, setPassword ] = useState('')
+    const [ spinner, setSpinner ] = useState('')
 
     useEffect(()=>{
         AsyncStorage.getItem('Email').then((response)=>{
@@ -19,20 +27,36 @@ const Login = ({navigation})=>{
     },[])
 
     async function handleLogin(){
-        try{
+        setSpinner(true)
             const response = await firebase.auth().signInWithEmailAndPassword(email, password)
-            await AsyncStorage.setItem('Email',JSON.stringify(response.user.email))
-            navigation.navigate('Main')
+                .then(()=>{
+                    setSpinner(false)
+                        AsyncStorage.setItem('Email',email)
+                            navigation.navigate('Main')
+                })
+                .catch(()=>{
+                    setSpinner(false)
+                        console.log('Error')
+                })
+    }
+    function Buttom(){
+        if(spinner){
+            return(
+                <ActivityIndicator style={styles.spinners} size='large' color='white'/>
+            )
         }
-        catch(err){
-
-        }
+        return(
+            <TouchableOpacity
+            onPress={()=> handleLogin()}
+            style={styles.button}>
+            <Text style={styles.logger}>Entrar</Text>
+            </TouchableOpacity>
+        )
     }
     return(
         <View style={styles.container}>
             <View style={styles.container_logo}>
-                <Image style={styles.logo} source={Delivery}/>
-                <Text style={styles.logo_text}>HELP-GÁS</Text>
+                <Text style={styles.logo_text}>HELP</Text>
             </View>
             <TextInput
             style={styles.input}
@@ -47,11 +71,7 @@ const Login = ({navigation})=>{
             secureTextEntry
             onChangeText={(text)=> setPassword(text)}
             />
-            <TouchableOpacity
-                onPress={()=> handleLogin()}
-                style={styles.button}>
-                <Text style={styles.logger}>Entrar</Text>
-            </TouchableOpacity>
+            {Buttom()}
             <TouchableOpacity style={styles.register} 
                 onPress={()=> navigation.navigate('Register')}>
                 <Text style={styles.text_register}>Não tem cadastro? Cadastre-se</Text>
@@ -74,7 +94,7 @@ const styles = StyleSheet.create({
         backgroundColor:'white',
         marginBottom: 12,
         borderRadius: 4,
-        height: 47
+        height: 48, 
     },
     button:{
         alignSelf: 'stretch',
@@ -97,12 +117,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     logo_text:{
-        fontSize: 40,
-        color: '#E67E22',
+        fontSize: 48,
+        color: 'white',
         marginLeft: 8,
         marginTop: 4,
         marginBottom: 40,
-        fontWeight:'bold'
+        fontWeight:'bold',
     },
     logo:{
         width: 90,
@@ -113,6 +133,10 @@ const styles = StyleSheet.create({
     },
     text_register:{
         color: 'white'
+    },
+    spinners:{
+        marginTop: 40,
+        height: 50,
     }
 })
 export default Login
