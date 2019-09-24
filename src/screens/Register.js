@@ -157,8 +157,9 @@ const styles = StyleSheet.create({
     registerSucess:{
         textAlign: 'center',
         marginTop: 4,
-        color: 'green',
-        fontSize: 17
+        color: 'white',
+        fontSize: 17,
+        fontWeight: '800'
 
     }
 })

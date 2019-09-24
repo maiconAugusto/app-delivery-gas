@@ -7,7 +7,6 @@ import {View ,
         ActivityIndicator, 
         AsyncStorage } 
         from 'react-native';
-import Delivery from '../assets/gas.png';
 import firebase from 'firebase'
 
 const Login = ({navigation})=>{
@@ -17,12 +16,7 @@ const Login = ({navigation})=>{
 
     useEffect(()=>{
         AsyncStorage.getItem('Email').then((response)=>{
-            if( response === null){
-                return
-            }
-            else{
-                navigation.navigate('Main')
-            }
+            response === null ? null :  navigation.navigate('Main')
         })
     },[])
 
@@ -34,9 +28,8 @@ const Login = ({navigation})=>{
                         AsyncStorage.setItem('Email',email)
                             navigation.navigate('Main')
                 })
-                .catch(()=>{
+                .catch((response)=>{
                     setSpinner(false)
-                        console.log('Error')
                 })
     }
     function Buttom(){
@@ -60,13 +53,13 @@ const Login = ({navigation})=>{
             </View>
             <TextInput
             style={styles.input}
-            placeholder=" Login"
+            placeholder=" E-mail"
             placeholderTextColor="#323232"
             onChangeText={(text)=> setEmail(text)}
             />
             <TextInput
             style={styles.input}
-            placeholder=" Password"
+            placeholder=" Senha"
             placeholderTextColor="#323232"
             secureTextEntry
             onChangeText={(text)=> setPassword(text)}

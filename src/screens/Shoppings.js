@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     now:{
-        backgroundColor:'#45E74C',
+        backgroundColor:'#90FF70',
         margin: 6,
         padding: 24,
         borderRadius: 4
@@ -105,6 +105,12 @@ const styles = StyleSheet.create({
     info:{
         color: '#323232',
         fontSize: 16
+    },
+    registers:{
+        textAlign: 'center',
+        fontSize: 24,
+        marginTop: 40,
+        color: '#B2BABB'
     }
 })
 export default Shopping
