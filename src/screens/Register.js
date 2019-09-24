@@ -146,9 +146,10 @@ const styles = StyleSheet.create({
     },
     text_register:{
         textAlign: 'center',
-        color: '#323232',
-        fontSize: 18,
-        fontWeight: '600'
+        textAlign: 'center',
+        fontSize: 20,
+        color: '#0066ff',
+        fontWeight:'bold'
     },
     spinners:{
         marginTop: 40,

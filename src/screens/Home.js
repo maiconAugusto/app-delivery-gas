@@ -66,7 +66,7 @@ const Home = ({navigation})=>{
     }
     function handlerLoggof(){
         AsyncStorage.removeItem('Email')
-        navigation.pop()
+        navigation.navigate('Initial')
     }
     return(
         <View style={styles.container}>

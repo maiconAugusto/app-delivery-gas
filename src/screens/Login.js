@@ -48,9 +48,6 @@ const Login = ({navigation})=>{
     }
     return(
         <View style={styles.container}>
-            <View style={styles.container_logo}>
-                <Text style={styles.logo_text}>HELP</Text>
-            </View>
             <TextInput
             style={styles.input}
             placeholder=" E-mail"
@@ -65,17 +62,13 @@ const Login = ({navigation})=>{
             onChangeText={(text)=> setPassword(text)}
             />
             {Buttom()}
-            <TouchableOpacity style={styles.register} 
-                onPress={()=> navigation.navigate('Register')}>
-                <Text style={styles.text_register}>Não tem cadastro? Cadastre-se</Text>
-            </TouchableOpacity>
         </View>
     )
 }
 const styles = StyleSheet.create({
     container:{
         flex : 1,
-        backgroundColor :'#2476E6',
+        backgroundColor :'#0066ff',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems:'center'
@@ -93,7 +86,7 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         marginRight: 10,
         marginLeft: 10,
-        backgroundColor:'white',
+        backgroundColor:'#0FDD7F',
         marginTop: 40,
         height: 50,
         justifyContent: 'center',
@@ -101,21 +94,9 @@ const styles = StyleSheet.create({
     },
     logger:{
         textAlign: 'center',
-        color: '#323232',
-        fontSize: 18,
-        fontWeight: '600'
-    },
-    container_logo:{
-        flexDirection: 'column',
-        alignItems: 'center'
-    },
-    logo_text:{
-        fontSize: 48,
+        fontSize: 20,
         color: 'white',
-        marginLeft: 8,
-        marginTop: 4,
-        marginBottom: 40,
-        fontWeight:'bold',
+        fontWeight:'bold'
     },
     logo:{
         width: 90,
