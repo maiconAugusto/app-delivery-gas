@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {View, 
         TextInput, 
         TouchableOpacity, 
@@ -10,6 +10,7 @@ import firebase from '../config/firebase'
 import base64 from 'base-64'
 import axios from 'axios'
 import date from '../config/Date'
+import Geolocalização from 'react-native-geolocation-service'
 
 const Register = ({navigation})=>{
 
@@ -20,9 +21,25 @@ const Register = ({navigation})=>{
     const [ phone, setPhone ] = useState('')
     const [ spinner, setSpinner ] = useState('')
     const [ registerSucess, setRegisterSecess ] = useState('')
+    const [ longitude,  setLongitude ] = useState('')
+    const [ latitude, setLatitude ] = useState('')
+
+    useEffect(()=>{
+        handleLocation()
+    },[])
+
+    async function handleLocation(){
+        const Location = await Geolocalização.getCurrentPosition((data)=>{
+            const { latitude, longitude } = data.coords
+            setLatitude(JSON.stringify(latitude))
+            setLongitude(JSON.stringify(longitude))
+        },(err)=>{
+
+        })
+    }
 
     async function handleRegister(){
-        
+
         setSpinner(true)
         const email_ID = base64.encode(email)
         if(!name || !email || !password || !phone) return setSpinner(false)
@@ -31,8 +48,10 @@ const Register = ({navigation})=>{
         const response = await firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(()=>{
                 axios.post(`Users/${email_ID}.json`,{
-                    name, phone, email, created: date })    
-            })
+                    name, phone, email, created: date, geolocalization:{
+                        latitude, longitude
+                    } })    
+            }) 
             .then(()=>{
                 setRegisterSecess(true)
             })

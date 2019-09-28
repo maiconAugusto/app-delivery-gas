@@ -30,6 +30,8 @@ target 'delivery_gas' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
+
   target 'delivery_gasTests' do
     inherit! :search_paths
     # Pods for testing

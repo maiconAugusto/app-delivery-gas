@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { View , StyleSheet, Image, Text, TouchableOpacity, AsyncStorage} from 'react-native'
 import BTJ from '../assets/BTJ.png'
 import { Icon } from 'react-native-elements'
-import axios from 'axios'
 import base64 from 'base-64'
 import date from '../config/Date'
 import firebase from 'firebase'
-import Header from './Header'
+import Geolocalização from 'react-native-geolocation-service'
 
 
 const Home = ({navigation})=>{
@@ -15,6 +14,23 @@ const Home = ({navigation})=>{
     const [ notProduct, setNotProduct ] = useState('')
     const [ Token, setToken ] = useState('')
     const [ value, setValue ] = useState('')
+    const [ longitude,  setLongitude ] = useState('')
+    const [ latitude, setLatitude ] = useState('')
+
+    useEffect(()=>{
+        handleLocation()
+    },[])
+
+    async function handleLocation(){
+        const Location = await Geolocalização.getCurrentPosition((data)=>{
+            const { latitude, longitude } = data.coords
+            setLatitude(JSON.stringify(latitude))
+            setLongitude(JSON.stringify(longitude))
+            console.log(data)
+        },(err)=>{
+            
+        })
+    }
 
     useEffect(()=>{
         firebase.database().ref('Price')
@@ -50,9 +66,18 @@ const Home = ({navigation})=>{
     async function handlerFinalized(){
         if(quantity === 0){
             return setNotProduct(false)}
-        firebase.database().ref(`/Pedidos/${Token}`).push({
-            user: Token, quantity, price, request_date: date, router_of_delivery: false, delivered: false
+        
+        firebase.database().ref(`/Pedidos/${Token}`).set({
+            user: Token, quantity, price, request_date: date, router_of_delivery: false, delivered: false,geolocalization:{
+                latitude, longitude }
         })
+            .then(()=>{
+                firebase.database().ref(`/Pedido/Users/${Token}`).push({
+                    user: Token, quantity, price, request_date: date, router_of_delivery: false, delivered: false, geolocalization:{
+                        latitude, longitude }
+                })
+            })
+
         setQuantity(0)
         setPrice(0)
     }
@@ -61,7 +86,7 @@ const Home = ({navigation})=>{
             setNotProduct(true)
         },4000)
         return(
-            <Text style={styles.msg_err}>SELECIONE O PRODUTO</Text>
+            <Text style={styles.msg_err}>selecione o produto</Text>
         )
     }
     function handlerLoggof(){
@@ -83,7 +108,7 @@ const Home = ({navigation})=>{
                         <TouchableOpacity onPress={()=>handlerAdd(1)}>
                             <Icon
                             size={40}
-                            color='#45E74C'
+                            color='#0FDD7F'
                             name="add-box"
                             iconStyle={{marginRight: 8}}
                             />
@@ -134,14 +159,16 @@ const styles = StyleSheet.create({
     },
     price:{
         marginRight: 30,
-        fontSize: 14,
-        color: '#323232'
+        fontSize: 16,
+        color: '#323232',
+        textTransform:'uppercase'
     },
     description:{
         marginRight: 8,
         fontSize: 16,
         fontWeight: '600',
-        color: '#323232'
+        color: '#323232',
+        textTransform:'uppercase'
     },
     iconBTJ:{
         height: 70,
@@ -163,7 +190,7 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         marginRight: 10,
         marginLeft: 10,
-        backgroundColor:'#45E74C',
+        backgroundColor:'#0FDD7F',
         marginTop: 20,
         height: 50,
         justifyContent: 'center',
@@ -180,18 +207,22 @@ const styles = StyleSheet.create({
         borderRadius: 4
     },
     btn_end:{
+        color: 'white',
+        fontSize:16,
+        fontWeight:'bold',
         textAlign:'center',
-        fontSize: 18,
-        color: '#323232'
+        textTransform:'uppercase'
     },
     text_info_qtd_price:{
         fontSize: 16,
-        color: '#323232'
+        color: '#323232',
+        textTransform: 'uppercase'
     },
     msg_err:{
         marginTop: 10,
         fontSize: 18,
-        color :'#EA4C4C'
+        color :'#EA4C4C',
+        textTransform:'uppercase'
     },
     exit:{
         flexDirection :'row',
@@ -206,9 +237,9 @@ const styles = StyleSheet.create({
         backgroundColor :'#2476E6',
     },
     exit:{
-        fontSize: 17,
-        color: 'white',
-        fontWeight: '800',
+        color :'white',
+        fontWeight:'bold',
+        textTransform:'uppercase',
         marginRight: 8
     }
 })

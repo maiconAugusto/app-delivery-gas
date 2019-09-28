@@ -11,27 +11,27 @@ const Shopping = ()=>{
     useEffect(()=>{
         AsyncStorage.getItem("Email").then((response)=>{
             const email = baseb4.encode(response)
-                firebase.database().ref(`Pedidos/${email}`)
+                firebase.database().ref(`Pedido/Users/${email}`)
                     .on('value',snapshot=>{
                         const data = _.values(snapshot.val())
                             setHistoric(data)
                     })
         })
     },[])
-
+    
     function handleHistory(item){
         if(item.delivered === true){
             return(
                 <View style={styles.historic_list}>
-                    <Text style={styles.info}>Quantidade: {item.quantity}</Text>
-                    <Text style={styles.info}>Preço: {item.price}</Text>
-                    <Text style={styles.info}>Data: {item.request_date}</Text>
+                    <Text style={styles.info_historic}>Quantidade: {item.quantity}</Text>
+                    <Text style={styles.info_historic}>Preço: {item.price}</Text>
+                    <Text style={styles.info_historic}>Data: {item.request_date}</Text>
                 </View>
             )
         }
     }
     function handleHistoryNow(item){
-        if( date === item.request_date){
+        if(item.delivered === false){
             return(
                 <View style={styles.now}>
                     <Text style={styles.finality}>Pronto para entrega</Text>
@@ -48,11 +48,10 @@ const Shopping = ()=>{
                 <FlatList
                 data={historic}
                 renderItem={({item})=>handleHistoryNow(item)}
-                keyExtractor={(item,index)=> index.toFixed()}
                 />
             </View>
             <View style={styles.historic}>
-                <Text style={styles.historic_text}>Seu histórico:</Text>
+                <Text style={styles.historic_text}>Seu histórico</Text>
                 <FlatList
                 data={historic}
                 renderItem={({item})=> handleHistory(item)}
@@ -73,7 +72,7 @@ const styles = StyleSheet.create({
         flex: 6
     },
     historic_list:{
-        backgroundColor: '#EAEDED',
+        backgroundColor: '#323232',
         margin: 6,
         padding: 14,
         borderRadius: 4
@@ -83,13 +82,13 @@ const styles = StyleSheet.create({
         marginTop: 6,
         marginBottom: 6,
         color: '#323232',
-        fontWeight:'800',
+        fontWeight:'bold',
         textTransform:'uppercase',
         fontSize: 16,
         textAlign: 'center'
     },
     now:{
-        backgroundColor:'#90FF70',
+        backgroundColor:'#0FDD7F',
         margin: 6,
         padding: 24,
         borderRadius: 4
@@ -97,14 +96,20 @@ const styles = StyleSheet.create({
     finality:{
         textAlign: 'center',
         textTransform: 'uppercase',
-        marginBottom:8,
-        color: '#323232',
-        fontWeight:'800',
+        marginBottom:12,
+        color: 'white',
+        fontWeight:'bold',
         fontSize: 16
     },
     info:{
-        color: '#323232',
-        fontSize: 16
+        color: 'white',
+        fontSize: 16,
+        textTransform :'uppercase',
+    },
+    info_historic:{
+        color: 'white',
+        fontSize: 16,
+        textTransform :'uppercase',
     },
     registers:{
         textAlign: 'center',

@@ -1,5 +1,4 @@
 import firebase from 'firebase'
-import axios from 'axios'
 
     const firebaseConfig = {
         apiKey: "AIzaSyC0f6gYHUWEdu4jvR-TAG-F9xJX8JK2aeA",
